@@ -28,8 +28,7 @@ bot.on('ready', function(evt) {
 })
 
 bot.on('message', function(user, userID, channelID, message, evt) {
-    //logger.info("message: " + message + " user: " + user + " channelID: " + channelID + " evt: " + evt + " user id : " + userID)
-    console.log(message)
+   
     //view all of the messages and look for a twitch clip link
     if (channelID == "633351348838072320") {
         var urls = Array.from(getUrls(message))
