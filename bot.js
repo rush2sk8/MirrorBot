@@ -34,9 +34,18 @@ bot.on('message', function(user, userID, channelID, message, evt) {
     if (channelID == "633351348838072320" || channelID == "423939714723348510") {
         var urls = Array.from(getUrls(message))
 
+        logger.info(message + " urls: " + urls)
+
         if (urls.length >= 1) {
             if (urls[0].match(/https:\/\/clips.twitch.tv\//) != null) {
+
                 downloadClip(urls[0], channelID)
+            } else if (urls[0].match(/https:\/\/twitch.tv\//) != null) {
+
+                const regex = /https:\/\/twitch.tv\/[a-zA-Z]*\/clip\//;
+                const newUrl = urls[0].replace(regex, 'https://clips.twitch.tv/')
+
+                downloadClip(newUrl, channelID)
             }
         }
     }
@@ -51,7 +60,6 @@ function downloadClip(url, channelID) {
 
     var filename = null
 
-    // Will be called when the download starts.
     video.on('info', function(info) {
         console.log('Download started')
         console.log('filename: ' + info._filename)
@@ -59,7 +67,6 @@ function downloadClip(url, channelID) {
         filename = info._filename
         video.pipe(fs.createWriteStream(filename))
     })
-
 
     video.on('end', () => {
         console.log(filename)
