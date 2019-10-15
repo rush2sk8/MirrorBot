@@ -10,13 +10,14 @@ const request = require('request')
 const streamableuser = streamableauth.user
 const streamablepass = streamableauth.pass
 
-// Configure logger settings
+var finishedQueue = []
+
 logger.remove(logger.transports.Console)
 logger.add(new logger.transports.Console, {
     colorize: true
 })
 logger.level = 'debug'
-// Initialize Discord Bot
+
 const bot = new Discord.Client({
     token: auth.token,
     autorun: true
@@ -28,9 +29,9 @@ bot.on('ready', function(evt) {
 })
 
 bot.on('message', function(user, userID, channelID, message, evt) {
-   
+
     //view all of the messages and look for a twitch clip link
-    if (channelID == "633351348838072320") {
+    if (channelID == "633351348838072320" || channelID == "423939714723348510") {
         var urls = Array.from(getUrls(message))
 
         if (urls.length >= 1) {
@@ -63,6 +64,10 @@ function downloadClip(url, channelID) {
     video.on('end', () => {
         console.log(filename)
         uploadToStreamable(filename, channelID)
+        fs.unlink(filename, (err) => {
+            if (err) throw err;
+            console.log(filename+ ' was deleted');
+        });
     })
 }
 
@@ -74,7 +79,7 @@ function uploadToStreamable(filename, channelID) {
             console.log('Error!');
         } else {
             var shortcode = JSON.parse(body).shortcode
-            sendMsgToBot(channelID, "https://www.streamable.com/" + shortcode+" Please note the video may still be processing")       
+            sendMsgToBot(channelID, "https://www.streamable.com/" + shortcode + " Please note the video may still be processing")
         }
     }).auth(streamableuser, streamablepass)
     var form = req.form()
