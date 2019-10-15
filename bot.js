@@ -64,10 +64,6 @@ function downloadClip(url, channelID) {
     video.on('end', () => {
         console.log(filename)
         uploadToStreamable(filename, channelID)
-        fs.unlink(filename, (err) => {
-            if (err) throw err;
-            console.log(filename+ ' was deleted');
-        });
     })
 }
 
@@ -79,7 +75,15 @@ function uploadToStreamable(filename, channelID) {
             console.log('Error!');
         } else {
             var shortcode = JSON.parse(body).shortcode
-            sendMsgToBot(channelID, "https://www.streamable.com/" + shortcode + " Please note the video may still be processing")
+            if (shortcode == null || shortcode == "") {
+                sendMsgToBot(channelID, "Video failed to upload to streamable please try again")
+            } else {
+                sendMsgToBot(channelID, "https://www.streamable.com/" + shortcode + " Please note the video may still be processing")
+            }
+            fs.unlink(filename, (err) => {
+                if (err) throw err;
+                console.log(filename + ' was deleted');
+            });
         }
     }).auth(streamableuser, streamablepass)
     var form = req.form()
