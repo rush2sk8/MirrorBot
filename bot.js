@@ -52,7 +52,7 @@ bot.on('message', function(user, userID, channelID, message, evt) {
 })
 
 function downloadClip(url, channelID) {
-    sendMsgToBot(channelID, "Downloading Clip....")
+
     var video = youtubedl(
         url,
         ['--format=mp4'], { cwd: __dirname }
@@ -75,7 +75,6 @@ function downloadClip(url, channelID) {
 }
 
 function uploadToStreamable(filename, channelID) {
-    sendMsgToBot(channelID, "Uploading to streamable....")
 
     var req = request.post("https://api.streamable.com/upload", (err, resp, body) => {
         if (err) {
@@ -85,7 +84,7 @@ function uploadToStreamable(filename, channelID) {
             if (shortcode == null || shortcode == "") {
                 sendMsgToBot(channelID, "Video failed to upload to streamable please try again")
             } else {
-                sendMsgToBot(channelID, "https://www.streamable.com/" + shortcode + " Please note the video may still be processing")
+                sendMsgToBot(channelID, "https://www.streamable.com/" + shortcode)
             }
             fs.unlink(filename, (err) => {
                 if (err) throw err;
