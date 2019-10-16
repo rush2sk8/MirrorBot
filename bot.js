@@ -30,8 +30,10 @@ bot.on('ready', function(evt) {
 
 bot.on('message', function(user, userID, channelID, message, evt) {
 
+    const channelName = bot.channels[channelID].name;
+	console.log("name: " + channelName)
     //view all of the messages and look for a twitch clip link
-    if (channelID == "633351348838072320" || channelID == "574648296564326430" || channelID == "556660005387108352") {
+    if (channelName.match(/clip/) != null) {
         var urls = Array.from(getUrls(message))
 
         logger.info(message + " urls: " + urls)
@@ -104,3 +106,4 @@ function sendMsgToBot(channelID, msg) {
         message: msg
     })
 }
+
