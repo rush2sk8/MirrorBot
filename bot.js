@@ -10,8 +10,6 @@ const request = require('request')
 const streamableuser = streamableauth.user
 const streamablepass = streamableauth.pass
 
-var finishedQueue = []
-
 logger.remove(logger.transports.Console)
 logger.add(new logger.transports.Console, {
     colorize: true
