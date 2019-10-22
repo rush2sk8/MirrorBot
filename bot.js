@@ -29,7 +29,7 @@ bot.on('ready', function(evt) {
 bot.on('message', function(user, userID, channelID, message, evt) {
 
     const channelName = bot.channels[channelID].name;
-	console.log("name: " + channelName)
+
     //view all of the messages and look for a twitch clip link
     if (channelName.match(/clip/) != null) {
         var urls = Array.from(getUrls(message))
@@ -61,15 +61,15 @@ function downloadClip(url, channelID) {
     var filename = null
 
     video.on('info', function(info) {
-        console.log('Download started')
-        console.log('filename: ' + info._filename)
-        console.log('size: ' + info.size)
+        //console.log('Download started')
+        //console.log('filename: ' + info._filename)
+        //console.log('size: ' + info.size)
         filename = info._filename
         video.pipe(fs.createWriteStream(filename))
     })
 
     video.on('end', () => {
-        console.log(filename)
+        //console.log(filename)
         uploadToStreamable(filename, channelID)
     })
 }
@@ -97,7 +97,7 @@ function uploadToStreamable(filename, channelID) {
 }
 
 function sendMsgToBot(channelID, msg) {
-    console.log("Sending msg: " + msg)
+    //console.log("Sending msg: " + msg)
     bot.sendMessage({
         to: channelID,
         message: msg
