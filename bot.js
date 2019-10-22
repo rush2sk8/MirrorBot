@@ -20,6 +20,7 @@ const bot = new Discord.Client({
     token: auth.token,
     autorun: true
 })
+
 bot.on('ready', function(evt) {
     logger.info('Connected')
     logger.info('Logged in as: ')
@@ -32,12 +33,10 @@ bot.on('message', function(user, userID, channelID, message, evt) {
 
     //view all of the messages and look for a twitch clip link
     if (channelName.match(/clip/) != null) {
-        
-        
-        if(message.match(/\.status/) != null){
-            sendMsgToBot(channelID, "Online")
-        }
-        else {
+
+        if (message.match(/\.status/) != null) {
+            sendStatusMessage(channelID);
+        } else {
             var urls = Array.from(getUrls(message))
 
             logger.info(message + " urls: " + urls)
@@ -105,3 +104,20 @@ function sendMsgToBot(channelID, msg) {
     })
 }
 
+function sendStatusMessage(channelID) {
+    bot.sendMessage({
+        to: channelID,
+        msg: "",
+        embed: {
+            color: 448323,
+            author: {
+                "name": "Mirror Bot status",
+                "icon_url": "https://cdn.discordapp.com/avatars/633350391706288129/65a3e41172164066d8f80c1df028b286.png?size=128"
+            },
+            fields: [{
+                "name": "Status",
+                "value": "Online"
+            }]
+        }
+    });
+}
