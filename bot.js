@@ -32,20 +32,27 @@ bot.on('message', function(user, userID, channelID, message, evt) {
 
     //view all of the messages and look for a twitch clip link
     if (channelName.match(/clip/) != null) {
-        var urls = Array.from(getUrls(message))
+        
+        
+        if(message.match(/\.status/) != null){
+            sendMsgToBot(channelID, "Online")
+        }
+        else {
+            var urls = Array.from(getUrls(message))
 
-        logger.info(message + " urls: " + urls)
+            logger.info(message + " urls: " + urls)
 
-        if (urls.length >= 1) {
-            if (urls[0].match(/https:\/\/clips.twitch.tv\//) != null) {
+            if (urls.length >= 1) {
+                if (urls[0].match(/https:\/\/clips.twitch.tv\//) != null) {
 
-                downloadClip(urls[0], channelID)
-            } else if (urls[0].match(/https:\/\/twitch.tv\//) != null) {
+                    downloadClip(urls[0], channelID)
+                } else if (urls[0].match(/https:\/\/twitch.tv\//) != null) {
 
-                const regex = /https:\/\/twitch.tv\/[a-zA-Z]*\/clip\//;
-                const newUrl = urls[0].replace(regex, 'https://clips.twitch.tv/')
+                    const regex = /https:\/\/twitch.tv\/[a-zA-Z]*\/clip\//;
+                    const newUrl = urls[0].replace(regex, 'https://clips.twitch.tv/')
 
-                downloadClip(newUrl, channelID)
+                    downloadClip(newUrl, channelID)
+                }
             }
         }
     }
@@ -61,15 +68,11 @@ function downloadClip(url, channelID) {
     var filename = null
 
     video.on('info', function(info) {
-        //console.log('Download started')
-        //console.log('filename: ' + info._filename)
-        //console.log('size: ' + info.size)
         filename = info._filename
         video.pipe(fs.createWriteStream(filename))
     })
 
     video.on('end', () => {
-        //console.log(filename)
         uploadToStreamable(filename, channelID)
     })
 }
@@ -88,7 +91,6 @@ function uploadToStreamable(filename, channelID) {
             }
             fs.unlink(filename, (err) => {
                 if (err) throw err;
-                console.log(filename + ' was deleted');
             });
         }
     }).auth(streamableuser, streamablepass)
@@ -97,7 +99,6 @@ function uploadToStreamable(filename, channelID) {
 }
 
 function sendMsgToBot(channelID, msg) {
-    //console.log("Sending msg: " + msg)
     bot.sendMessage({
         to: channelID,
         message: msg
