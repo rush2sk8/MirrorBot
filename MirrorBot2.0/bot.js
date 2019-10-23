@@ -97,9 +97,8 @@ function uploadToStreamable(filename, message) {
 }
 
 function sendStatusMessage(message) {
-
 	const embedStatus = new Discord.RichEmbed()
-		.setColor("#448323")
+		.setColor("#2cf00e")
 		.setTitle("Mirror Bot Status")
 		.setThumbnail("https://cdn.discordapp.com/avatars/633350391706288129/65a3e41172164066d8f80c1df028b286.png?size=128")
 		.addField("Status", "Online")
