@@ -6,7 +6,7 @@
 * Updated to discord.js api
 * Using pm2 for deployment
  * Cool bc now we can hot reload the app 
-
+* Added a queue of messages that will be help for 5 mins until video is fully processed on streamable then the message will update with the thumbnail. :)
 
 
 

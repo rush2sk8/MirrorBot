@@ -6,6 +6,7 @@ var streamableauth = require("./streamableauth.json")
 var fs = require('fs')
 var youtubedl = require('youtube-dl')
 const request = require('request')
+var messageQ = []
 
 const streamableuser = streamableauth.user
 const streamablepass = streamableauth.pass
@@ -26,6 +27,8 @@ bot.on('ready', function(evt) {
     bot.user.setActivity("Made by rush2sk8", { type: "STREAMING", url: "https://www.twitch.tv/rush2sk8" })
 })
 
+
+
 bot.on('message', (message)=> {
 
     const channelName = message.channel.name;
@@ -34,8 +37,11 @@ bot.on('message', (message)=> {
     if (channelName.match(/clip/) != null) {
 
         if (message.content.startsWith(".status")) {
-            sendStatusMessage(message);
-        } else {
+            sendStatusMessage(message)
+	//message.channel.send("hi").then((newMessage) => {
+	//setTimeout(()=>{newMessage.edit("lmao")}, 2000)
+	//})
+	} else {
             var urls = Array.from(getUrls(message.content))
 
             logger.info(message + " urls: " + urls)
@@ -46,7 +52,7 @@ bot.on('message', (message)=> {
                     downloadClip(urls[0], message)
                 } else if (urls[0].match(/https:\/\/twitch.tv\//) != null &&
 
-			   urls.[0].match(/clip/) != null) {
+			   urls[0].match(/clip/) != null) {
 
                     const regex = /https:\/\/twitch.tv\/[a-zA-Z]*\/clip\//;
                     const newUrl = urls[0].replace(regex, 'https://clips.twitch.tv/')
@@ -87,8 +93,10 @@ function uploadToStreamable(filename, message) {
             if (shortcode == null || shortcode == "") {
                 message.channel.send("Video failed to upload to streamable please try again")
             } else {
-                message.channel.send("https://www.streamable.com/" + shortcode)
-            }
+		//store the promise
+		const url = "https://www.streamable.com/" + shortcode
+               messageQ.push([message.channel.send(url), url])
+	    }
             fs.unlink(filename, (err) => {
                 if (err) throw err;
             });
@@ -106,3 +114,13 @@ function sendStatusMessage(message) {
 		.addField("Status", "Online")
 	message.channel.send(embedStatus)
 }
+
+
+setInterval(()=>{
+	if(messageQ.length > 0){
+		var message = messageQ.shift()
+		message[0].then((newMessage) => {
+        		newMessage.edit(message[1])
+       		 })
+	}
+}, 5000*60*1)
