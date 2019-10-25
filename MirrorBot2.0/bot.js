@@ -44,7 +44,9 @@ bot.on('message', (message)=> {
                 if (urls[0].match(/https:\/\/clips.twitch.tv\//) != null) {
 
                     downloadClip(urls[0], message)
-                } else if (urls[0].match(/https:\/\/twitch.tv\//) != null) {
+                } else if (urls[0].match(/https:\/\/twitch.tv\//) != null &&
+
+			   urls.[0].match(/clip/) != null) {
 
                     const regex = /https:\/\/twitch.tv\/[a-zA-Z]*\/clip\//;
                     const newUrl = urls[0].replace(regex, 'https://clips.twitch.tv/')
