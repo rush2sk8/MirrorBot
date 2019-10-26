@@ -25,5 +25,6 @@ A discord bot that will convert any video posted in a channel with 'clips' in th
 
 ### TODO
 
+* Add youtube support and other websites.
 * No duplicate links 
 * Have a db of stuff thats been process as to not have to reupload something that's already done
