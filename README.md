@@ -1,6 +1,8 @@
 # MirrorBot 
 #### Version 1.2
 
+A discord bot that will convert any video posted in a channel with 'clips' in the name. Currently supports twitch clip conversion.
+
 ## Installation
 
 `npm install`
@@ -24,4 +26,4 @@
 ### TODO
 
 * No duplicate links 
-* Make a queue of done links and after 5 mins pop the queue and paste the link again so it renders it 
+* Have a db of stuff thats been process as to not have to reupload something that's already done
