@@ -10,7 +10,7 @@
 * `streamableauth.json` with `user` and `pass` fields
 * `auth.json` with the discord `token` field
 
-### Updates
+## Updates
 
 * Fixed bug where any twitch link would crash the app
 * Updated to discord.js api
