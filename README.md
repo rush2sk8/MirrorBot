@@ -1,4 +1,14 @@
-# MirrorBot 2.0
+# MirrorBot 
+#### Version 1.2
+
+## Installation
+
+`npm install`
+
+## Necessary files
+
+* `streamableauth.json` with `user` and `pass` fields
+* `auth.json` with the discord `token` field
 
 ### Updates
 
