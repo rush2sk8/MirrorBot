@@ -38,9 +38,10 @@ bot.on('message', (message)=> {
 
         if (message.content.startsWith(".status")) {
             sendStatusMessage(message)
-	//message.channel.send("hi").then((newMessage) => {
-	//setTimeout(()=>{newMessage.edit("lmao")}, 2000)
-	//})
+	}else if(message.content.startsWith(".help")){
+		message.channel.send("**.**m [youtube-link]")
+		message.channel.send("[twitch-clip-link]")
+		message.channel.send("**.**status")
 	} else {
             var urls = Array.from(getUrls(message.content))
 
@@ -59,6 +60,10 @@ bot.on('message', (message)=> {
 
                     downloadClip(newUrl, message)
                 }
+		else if(ytVidId(urls[0]) != false && message.content.startsWith(".m")){
+			const ytUrl = "https://youtube.com/watch?v=" + ytVidId(urls[0])
+		downloadClip(ytUrl, message)
+		}
             }
         }
     }
@@ -115,6 +120,10 @@ function sendStatusMessage(message) {
 	message.channel.send(embedStatus)
 }
 
+function ytVidId(url) {
+  var p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+  return (url.match(p)) ? RegExp.$1 : false;
+}
 
 setInterval(()=>{
 	if(messageQ.length > 0){
@@ -124,3 +133,4 @@ setInterval(()=>{
        		 })
 	}
 }, 5000*60*1)
+

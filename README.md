@@ -14,6 +14,12 @@ A discord bot that will convert any video posted in a channel with 'clips' in th
 
 ## Updates
 
+### Oct 27
+* Added youtube support
+* Added .help command 
+* For youtube links you need .m 
+
+### Oct 25
 * Fixed bug where any twitch link would crash the app
 * Updated to discord.js api
 * Using pm2 for deployment
@@ -25,6 +31,7 @@ A discord bot that will convert any video posted in a channel with 'clips' in th
 
 ### TODO
 
-* Add youtube support and other websites.
+* Add other mirror sites
+* Format .help
 * No duplicate links 
 * Have a db of stuff thats been process as to not have to reupload something that's already done
