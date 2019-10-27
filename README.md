@@ -12,6 +12,11 @@ A discord bot that will convert any video posted in a channel with 'clips' in th
 * `streamableauth.json` with `user` and `pass` fields
 * `auth.json` with the discord `token` field
 
+## Launching the bot
+Launch with [`pm2`](https://www.npmjs.com/package/pm2)
+
+`pm2 start bot.js`
+
 ## Updates
 
 ### Oct 27
