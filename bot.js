@@ -39,7 +39,7 @@ bot.on('message', (message)=> {
         if (message.content.startsWith(".status")) {
             sendStatusMessage(message)
 	}else if(message.content.startsWith(".help")){
-		message.channel.send("**.**m [youtube-link]")
+		message.channel.send("**.**m [youtube-link] works with smaller videos")
 		message.channel.send("[twitch-clip-link]")
 		message.channel.send("**.**status")
 	} else {
