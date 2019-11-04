@@ -28,8 +28,7 @@ bot.on('ready', function(evt) {
 })
 
 
-
-bot.on('message', (message)=> {
+bot.on('message', (message) => {
 
     const channelName = message.channel.name;
 
@@ -38,11 +37,11 @@ bot.on('message', (message)=> {
 
         if (message.content.startsWith(".status")) {
             sendStatusMessage(message)
-	}else if(message.content.startsWith(".help")){
-		message.channel.send("**.**m [youtube-link] works with smaller videos")
-		message.channel.send("[twitch-clip-link]")
-		message.channel.send("**.**status")
-	} else {
+        } else if (message.content.startsWith(".help")) {
+            message.channel.send("**.**m [youtube-link] works with smaller videos")
+            message.channel.send("[twitch-clip-link]")
+            message.channel.send("**.**status")
+        } else {
             var urls = Array.from(getUrls(message.content))
 
             logger.info(message + " urls: " + urls)
@@ -53,17 +52,16 @@ bot.on('message', (message)=> {
                     downloadClip(urls[0], message)
                 } else if (urls[0].match(/https:\/\/twitch.tv\//) != null &&
 
-			   urls[0].match(/clip/) != null) {
+                    urls[0].match(/clip/) != null) {
 
                     const regex = /https:\/\/twitch.tv\/[a-zA-Z]*\/clip\//;
                     const newUrl = urls[0].replace(regex, 'https://clips.twitch.tv/')
 
                     downloadClip(newUrl, message)
+                } else if (ytVidId(urls[0]) != false && message.content.startsWith(".m")) {
+                    const ytUrl = "https://youtube.com/watch?v=" + ytVidId(urls[0])
+                    downloadClip(ytUrl, message)
                 }
-		else if(ytVidId(urls[0]) != false && message.content.startsWith(".m")){
-			const ytUrl = "https://youtube.com/watch?v=" + ytVidId(urls[0])
-		downloadClip(ytUrl, message)
-		}
             }
         }
     }
@@ -98,10 +96,10 @@ function uploadToStreamable(filename, message) {
             if (shortcode == null || shortcode == "") {
                 message.channel.send("Video failed to upload to streamable please try again")
             } else {
-		//store the promise
-		const url = "https://www.streamable.com/" + shortcode
-               messageQ.push([message.channel.send(url), url])
-	    }
+                //store the promise
+                const url = "https://www.streamable.com/" + shortcode
+                messageQ.push([message.channel.send(url), url])
+            }
             fs.unlink(filename, (err) => {
                 if (err) throw err;
             });
@@ -112,25 +110,24 @@ function uploadToStreamable(filename, message) {
 }
 
 function sendStatusMessage(message) {
-	const embedStatus = new Discord.RichEmbed()
-		.setColor("#2cf00e")
-		.setTitle("Mirror Bot Status")
-		.setThumbnail("https://cdn.discordapp.com/avatars/633350391706288129/65a3e41172164066d8f80c1df028b286.png?size=128")
-		.addField("Status", "Online")
-	message.channel.send(embedStatus)
+    const embedStatus = new Discord.RichEmbed()
+        .setColor("#2cf00e")
+        .setTitle("Mirror Bot Status")
+        .setThumbnail("https://cdn.discordapp.com/avatars/633350391706288129/65a3e41172164066d8f80c1df028b286.png?size=128")
+        .addField("Status", "Online")
+    message.channel.send(embedStatus)
 }
 
 function ytVidId(url) {
-  var p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
-  return (url.match(p)) ? RegExp.$1 : false;
+    var p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+    return (url.match(p)) ? RegExp.$1 : false;
 }
 
-setInterval(()=>{
-	if(messageQ.length > 0){
-		var message = messageQ.shift()
-		message[0].then((newMessage) => {
-        		newMessage.edit(message[1])
-       		 })
-	}
-}, 5000*60*1)
-
+setInterval(() => {
+    if (messageQ.length > 0) {
+        var message = messageQ.shift()
+        message[0].then((newMessage) => {
+            newMessage.edit(message[1])
+        })
+    }
+}, 5000 * 60 * 1)
