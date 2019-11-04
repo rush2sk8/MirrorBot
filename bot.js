@@ -24,7 +24,7 @@ bot.on('ready', function(evt) {
     logger.info('Connected')
     logger.info('Logged in as: ')
     logger.info(bot.username + ' - (' + bot.id + ')')
-    bot.user.setActivity("Made by rush2sk8", { type: "STREAMING", url: "https://www.twitch.tv/rush2sk8" })
+    bot.user.setActivity(".help | by rush2sk8", { type: "STREAMING", url: "https://www.twitch.tv/rush2sk8" })
 })
 
 
