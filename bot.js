@@ -1,15 +1,11 @@
 const getUrls = require('get-urls')
 var Discord = require('discord.js')
 var logger = require('winston')
-const auth = require('./auth.json')
-var streamableauth = require("./streamableauth.json")
+
 var fs = require('fs')
 var youtubedl = require('youtube-dl')
 const request = require('request')
 var messageQ = []
-
-const streamableuser = streamableauth.user
-const streamablepass = streamableauth.pass
 
 logger.remove(logger.transports.Console)
 logger.add(new logger.transports.Console, {
@@ -18,7 +14,7 @@ logger.add(new logger.transports.Console, {
 logger.level = 'debug'
 
 const bot = new Discord.Client()
-bot.login(auth.token)
+bot.login(process.env.BOT_TOKEN)
 
 bot.on('ready', function(evt) {
     logger.info('Connected')
@@ -104,7 +100,7 @@ function uploadToStreamable(filename, message) {
                 if (err) throw err;
             });
         }
-    }).auth(streamableuser, streamablepass)
+    }).auth(process.env.STREAM_USER, process.env.STREAM_PASS)
     var form = req.form()
     form.append(filename, fs.createReadStream(filename))
 }
