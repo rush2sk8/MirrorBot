@@ -86,7 +86,7 @@ function uploadToStreamable(filename, message) {
 
     var req = request.post("https://api.streamable.com/upload", (err, resp, body) => {
         if (err || body == null || body == "") {
-            console.log('Error!');
+            console.log('Error! ' + err );
         } else {
             console.log("body: " + body)
      
