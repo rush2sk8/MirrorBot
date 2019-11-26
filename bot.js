@@ -85,15 +85,16 @@ function downloadClip(url, message) {
 function uploadToStreamable(filename, message) {
 
     var req = request.post("https://api.streamable.com/upload", (err, resp, body) => {
-        if (err || body == null) {
+        if (err || body == null || body == "") {
             console.log('Error!');
         } else {
             console.log("body: " + body)
-            var shortcode = JSON.parse(body).shortcode
-            if (shortcode == null || shortcode == "") {
+     
+            if (body == null || body == "") {
                 message.channel.send("Video failed to upload to streamable please try again")
             } else {
                 //store the promise
+                var shortcode = JSON.parse(body).shortcode
                 const url = "https://www.streamable.com/" + shortcode
                 messageQ.push([message.channel.send(url), url])
             }
