@@ -85,9 +85,10 @@ function downloadClip(url, message) {
 function uploadToStreamable(filename, message) {
 
     var req = request.post("https://api.streamable.com/upload", (err, resp, body) => {
-        if (err) {
+        if (err || body == null) {
             console.log('Error!');
         } else {
+            console.log("body: " + body)
             var shortcode = JSON.parse(body).shortcode
             if (shortcode == null || shortcode == "") {
                 message.channel.send("Video failed to upload to streamable please try again")
