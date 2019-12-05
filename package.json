@@ -10,7 +10,7 @@
     "request": "^2.88.0",
     "streamify": "^1.0.0",
     "winston": "^3.2.1",
-    "youtube-dl": "^2.0.1",
+    "youtube-dl": "^2.1.0",
     "discord.js": "^11.5.1"
   }
 }
