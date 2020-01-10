@@ -6,11 +6,11 @@
   "author": "rush2sk8",
   "dependencies": {
     "curl-request": "^1.1.1",
+    "discord.js": "^11.5.1",
     "get-urls": "^9.1.0",
     "request": "^2.88.0",
     "streamify": "^1.0.0",
     "winston": "^3.2.1",
-    "youtube-dl": "^2.0.1",
-    "discord.js": "^11.5.1"
+    "youtube-dl": "^2.3.0"
   }
 }
