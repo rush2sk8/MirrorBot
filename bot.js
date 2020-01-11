@@ -50,7 +50,7 @@ bot.on('message', (message)=> {
             if (urls.length >= 1) {
                 if (urls[0].match(/https:\/\/clips.twitch.tv\//) != null) {
 
-                    downloadClip(urls[0], message)
+                    uploadToStreamable(urls[0], message)
                 } else if (urls[0].match(/https:\/\/twitch.tv\//) != null &&
 
 			   urls[0].match(/clip/) != null) {
@@ -58,57 +58,36 @@ bot.on('message', (message)=> {
                     const regex = /https:\/\/twitch.tv\/[a-zA-Z]*\/clip\//;
                     const newUrl = urls[0].replace(regex, 'https://clips.twitch.tv/')
 
-                    downloadClip(newUrl, message)
+                    uploadToStreamable(newUrl, message)
                 }
 		else if(ytVidId(urls[0]) != false && message.content.startsWith(".m")){
-			const ytUrl = "https://youtube.com/watch?v=" + ytVidId(urls[0])
-		downloadClip(ytUrl, message)
+			uploadToStreamable(urls[0], message)
 		}
             }
         }
     }
 })
 
-function downloadClip(url, message) {
 
-    var video = youtubedl(
-        url,
-        ['--format=mp4'], { cwd: __dirname }
-    )
+function uploadToStreamable(url, message) {
+	var s_request = request.defaults({
+	headers: {'User-Agent': "mirrorbotdiscord"}
+	})
 
-    var filename = null
-
-    video.on('info', function(info) {
-        filename = info._filename
-        video.pipe(fs.createWriteStream(filename))
-    })
-
-    video.on('end', () => {
-        uploadToStreamable(filename, message)
-    })
-}
-
-function uploadToStreamable(filename, message) {
-
-    var req = request.post("https://api.streamable.com/upload", (err, resp, body) => {
+    s_request.get("https://api.streamable.com/import?url="+url, (err, resp, body) => {
         if (err) {
             console.log('Error!');
-        } else {
+        } else if(isJson(body)){
             var shortcode = JSON.parse(body).shortcode
             if (shortcode == null || shortcode == "") {
                 message.channel.send("Video failed to upload to streamable please try again")
             } else {
 		//store the promise
-		const url = "https://www.streamable.com/" + shortcode
-               messageQ.push([message.channel.send(url), url])
+		const s_url = "https://www.streamable.com/" + shortcode
+               messageQ.push([message.channel.send(s_url), s_url])
 	    }
-            fs.unlink(filename, (err) => {
-                if (err) throw err;
-            });
         }
     }).auth(streamableuser, streamablepass)
-    var form = req.form()
-    form.append(filename, fs.createReadStream(filename))
 }
 
 
@@ -124,6 +103,24 @@ function sendStatusMessage(message) {
 function ytVidId(url) {
   var p = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
   return (url.match(p)) ? RegExp.$1 : false;
+}
+
+function isJson(item) {
+    item = typeof item !== "string"
+        ? JSON.stringify(item)
+        : item;
+
+    try {
+        item = JSON.parse(item);
+    } catch (e) {
+        return false;
+    }
+
+    if (typeof item === "object" && item !== null) {
+        return true;
+    }
+
+    return false;
 }
 
 setInterval(()=>{
