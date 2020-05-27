@@ -1,3 +1,4 @@
+require('dotenv').config()
 const getUrls = require('get-urls')
 var Discord = require('discord.js')
 var logger = require('winston')
@@ -8,13 +9,13 @@ var youtubedl = require('youtube-dl')
 const request = require('request')
 var messageQ = []
 
-const streamableuser = streamableauth.user
-const streamablepass = streamableauth.pass
+const streamableuser = process.env.S_USER
+const streamablepass = process.env.S_PASS
 
 const k = require('keyv');
 const db = new k('postgresql://postgres:mypassword@localhost:5432/links');
 
- db.on('error', err => console.log('Connection Error', err));
+db.on('error', err => console.log('Connection Error', err));
 
 
 logger.remove(logger.transports.Console)
@@ -24,7 +25,7 @@ logger.add(new logger.transports.Console, {
 logger.level = 'debug'
 
 const bot = new Discord.Client()
-bot.login(auth.token)
+bot.login(process.env.DISCORD_TOKEN)
 
 bot.on('ready', function(evt) {
     logger.info('Connected')
