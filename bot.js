@@ -11,6 +11,12 @@ var messageQ = []
 const streamableuser = streamableauth.user
 const streamablepass = streamableauth.pass
 
+const k = require('keyv');
+const db = new k('postgresql://postgres:mypassword@localhost:5432/links');
+
+ db.on('error', err => console.log('Connection Error', err));
+
+
 logger.remove(logger.transports.Console)
 logger.add(new logger.transports.Console, {
     colorize: true
@@ -29,7 +35,7 @@ bot.on('ready', function(evt) {
 
 
 
-bot.on('message', (message)=> {
+bot.on('message', async message => {
 
     const channelName = message.channel.name;
 
@@ -49,16 +55,28 @@ bot.on('message', (message)=> {
 
             if (urls.length >= 1) {
                 if (urls[0].match(/https:\/\/clips.twitch.tv\//) != null) {
-
-                    uploadToStreamable(urls[0], message)
+			const fromDB = await db.get(urls[0])
+			console.log(fromDB)
+			if(fromDB === undefined){
+				uploadToStreamable(urls[0], message)
+			}else{
+				message.channel.send(fromDB)
+			}
                 } else if (urls[0].match(/https:\/\/twitch.tv\//) != null &&
 
 			   urls[0].match(/clip/) != null) {
 
-                    const regex = /https:\/\/twitch.tv\/[a-zA-Z]*\/clip\//;
-                    const newUrl = urls[0].replace(regex, 'https://clips.twitch.tv/')
+                        const regex = /https:\/\/twitch.tv\/[a-zA-Z]*\/clip\//;
+                        const newUrl = urls[0].replace(regex, 'https://clips.twitch.tv/')
 
-                    uploadToStreamable(newUrl, message)
+   			const fromDB = await db.get(newUrl)
+
+			if(fromDB === undefined){
+                             uploadToStreamable(newUrl, message)
+                        }else{
+                                message.channel.send(fromDB)
+                        }
+
                 }
 		else if(ytVidId(urls[0]) != false && message.content.startsWith(".m")){
 			uploadToStreamable(urls[0], message)
@@ -74,7 +92,7 @@ function uploadToStreamable(url, message) {
 	headers: {'User-Agent': "mirrorbotdiscord"}
 	})
 
-    s_request.get("https://api.streamable.com/import?url="+url, (err, resp, body) => {
+    s_request.get("https://api.streamable.com/import?url="+url, async (err, resp, body) => {
         if (err) {
             console.log('Error!');
         } else if(isJson(body)){
@@ -84,7 +102,8 @@ function uploadToStreamable(url, message) {
             } else {
 		//store the promise
 		const s_url = "https://www.streamable.com/" + shortcode
-               messageQ.push([message.channel.send(s_url), s_url])
+		await db.set(url, s_url)
+                messageQ.push([message.channel.send(s_url), s_url])
 	    }
         }
     }).auth(streamableuser, streamablepass)
