@@ -1,0 +1,21 @@
+{
+  "name": "MirrorBot",
+  "version": "2.0.1",
+  "description": "Makes mirrors of twitch clips and uploads them to streamable",
+  "main": "bot.js",
+  "author": "rush2sk8",
+  "dependencies": {
+    "@keyv/postgres": "1.0.16",
+    "curl-request": "^1.1.1",
+    "discord.js": "^11.5.1",
+    "dotenv": "^8.2.0",
+    "get-urls": "^9.1.0",
+    "keyv": "^4.0.1",
+    "request": "^2.88.0",
+    "streamify": "^1.0.0",
+    "winston": "^3.2.1",
+    "youtube-dl": "^2.3.0",
+    "keyv": "^4.0.1",
+    "@keyv/postgres": "1.0.16"
+  }
+}
